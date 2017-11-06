@@ -44,18 +44,21 @@ class SocketHandler:
 
     def sendAndShowMsg(self,text):
         if text[0] == "#":
+            text_complete = text[1:]
             for clientSock in self.list_of_known_clientSockets:
-                clientSock.send(str.encode("Admin: "+text))
+                clientSock.send(str.encode("Admin: "+text_complete))
             print("We send this message to the clients: "+text)
         elif text[:6] =="/close":
             print("Sever shutting down")
             self.closeEveryThing()
         elif text[:5] =="/kick":
             user = text[6:]
-            print("User to remove"+user)
-            for i in range (len(self.list_of_known_clientSockets)):
-                if self.list_of_known_clientSockets == user:
-                    self.list_of_username.remove(i)
+            for i in range (len(self.list_of_username)):
+                if self.list_of_username[i] == user:
+                    self.list_of_username.pop(i)
+                    self.list_of_known_clientSockets[i].close()
+
+                    break
 
     def startReceiverThread(self, clientSocket, clientAddr):
         _thread.start_new_thread(self.startReceiving,(clientSocket,clientAddr,))
@@ -120,6 +123,6 @@ class SocketHandler:
             except:
                 self.list_of_known_clientSockets.remove(clientSocket)
                 self.list_of_known_clientAddr.remove(clientAddr)
-                self.sendAndShowMsg(username+" disconnected")
+                self.sendAndShowMsg("#"+username+" disconnected")
                 self.users.inactiveUser(username)
                 return
