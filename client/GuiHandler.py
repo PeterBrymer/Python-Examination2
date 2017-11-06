@@ -33,6 +33,14 @@ class GuiHandler:
 
     def startMainGui(self):
 
+        def send_with_enter(event):
+            send()
+            return 'break'
+
+        def send():
+            self.sendMsgBySocketHandler()
+            self.entryOfUser.delete(0, tkinter.END)
+
         self.root = tkinter.Tk()
         scroll = tkinter.Scrollbar(self.root)
         scroll.grid(row = 0, column = 1, sticky=tkinter.N+tkinter.S)
@@ -41,7 +49,8 @@ class GuiHandler:
         scroll.config(command=self.chattContents.yview)
         self.entryOfUser = tkinter.Entry(self.root)
         self.entryOfUser.grid(row = 1,column = 0)
-        self.buttonToTrigg = tkinter.Button(self.root, text = "enter", command = self.sendMsgBySocketHandler)
+        self.buttonToTrigg = tkinter.Button(self.root, text = "enter", command = send)
+        self.entryOfUser.bind('<Return>',send_with_enter)
         self.buttonToTrigg.grid(row = 1,column = 1)
 
         self.root.mainloop()

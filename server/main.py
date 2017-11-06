@@ -10,5 +10,5 @@ if resultOfBinding == "failed":
 else:
     while True:
         server_message=input()
-        socketHandler.startSendThread(server_message)
+        socketHandler.sendAndShowMsg(server_message)
 

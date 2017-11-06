@@ -43,24 +43,19 @@ class SocketHandler:
         return "succeed"
 
     def sendAndShowMsg(self,text):
-        if text[:1] == "#":
+        if text[0] == "#":
             for clientSock in self.list_of_known_clientSockets:
                 clientSock.send(str.encode("Admin: "+text))
-                print("We send this message to the clients: "+text)
+            print("We send this message to the clients: "+text)
         elif text[:6] =="/close":
             print("Sever shutting down")
             self.closeEveryThing()
         elif text[:5] =="/kick":
-            user = text[5:]
-            print(user)
-            for i in range (len(self.list_of_username)):
-                if [i] == user:
+            user = text[6:]
+            print("User to remove"+user)
+            for i in range (len(self.list_of_known_clientSockets)):
+                if self.list_of_known_clientSockets == user:
                     self.list_of_username.remove(i)
-                    self.list_of_known_clientAddr.remove(i)
-                    self.list_of_known_clientSockets.remove(i)
-
-    def startSendThread(self,text):
-        _thread.start_new_thread(self.sendAndShowMsg,(text,()))
 
     def startReceiverThread(self, clientSocket, clientAddr):
         _thread.start_new_thread(self.startReceiving,(clientSocket,clientAddr,))
@@ -73,7 +68,6 @@ class SocketHandler:
 
             self.list_of_unknown_clientSockets.remove(clientSocket)
             self.list_of_unknown_clientAddr.remove(clientAddr)
-
             self.list_of_username.append(username)
             self.list_of_known_clientSockets.append(clientSocket)
             self.list_of_known_clientAddr.append(clientAddr)
