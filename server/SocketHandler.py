@@ -15,11 +15,8 @@ class SocketHandler:
         sys.exit(0)
 
     def startAccepting(self):
-        print("innan while")
         while True:
-            print("innan try")
             try:
-                print("i try")
                 clientSocket, clientAddr = self.serverSocket.accept()
                 self.list_of_unknown_clientSockets.append(clientSocket)
                 self.list_of_unknown_clientAddr.append(clientAddr)
@@ -44,10 +41,22 @@ class SocketHandler:
         _thread.start_new_thread(self.startAccepting,())
         return "succeed"
 
-    def sendAndShowMsg(self, text):
-        print(text)
-        for clientSock in self.list_of_known_clientSockets:
-            clientSock.send(str.encode(text))
+    def sendAndShowMsg(self,text):
+        if text[:1] == "#":
+            for clientSock in self.list_of_known_clientSockets:
+                clientSock.send(str.encode("Admin: "+text))
+                print("We send this message to the clients: "+text)
+        elif text[:6] =="/close":
+            print("Sever shutting down")
+            self.closeEveryThing()
+        elif text[:5] =="/kick":
+            user = text[5:]
+            print(user)
+            self.list_of_known_clientSockets.remove
+            self.list_of_known_clientAddr.remove(clientAddr)
+            self.sendAndShowMsg(username + " disconnected")
+            self.users.inactiveUser(username)
+            return
 
     def startReceiverThread(self, clientSocket, clientAddr):
         _thread.start_new_thread(self.startReceiving,(clientSocket,clientAddr,))
@@ -106,6 +115,7 @@ class SocketHandler:
             try:
                 msg = clientSocket.recv(1024).decode()
                 self.sendAndShowMsg(username + ": " + msg)
+                print(username+": "+msg)
             except:
                 self.list_of_known_clientSockets.remove(clientSocket)
                 self.list_of_known_clientAddr.remove(clientAddr)

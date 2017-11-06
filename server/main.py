@@ -1,5 +1,4 @@
 from server.SocketHandler import SocketHandler
-import time
 socketHandler = SocketHandler()
 
 port = input("Enter port: ")
@@ -10,5 +9,6 @@ if resultOfBinding == "failed":
     print("Failed to start server")
 else:
     print("hej")
-
-time.sleep(999999)
+while True:
+    server_message=input(" ")
+    socketHandler.sendAndShowMsg(server_message)
