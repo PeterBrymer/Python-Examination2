@@ -1,4 +1,4 @@
-from server.SocketHandler import SocketHandler
+from SocketHandler import SocketHandler
 socketHandler = SocketHandler()
 
 port = input("Enter port: ")
