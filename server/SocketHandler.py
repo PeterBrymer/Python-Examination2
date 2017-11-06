@@ -30,7 +30,7 @@ class SocketHandler:
             self.serverSocket.bind(('',int(port)))
         except:
             return "failed"
-        self.serverSocket.listen()
+        self.serverSocket.listen(10)
 
         self.list_of_username = []
         self.list_of_known_clientSockets = []
