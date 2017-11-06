@@ -8,7 +8,7 @@ resultOfBinding = socketHandler.startToAcceptConnection(port)
 if resultOfBinding == "failed":
     print("Failed to start server")
 else:
-    print("hej")
-while True:
-    server_message=input(" ")
-    socketHandler.sendAndShowMsg(server_message)
+    while True:
+        server_message=input()
+        socketHandler.startSendThread(server_message)
+

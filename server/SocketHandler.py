@@ -32,6 +32,7 @@ class SocketHandler:
             return "failed"
         self.serverSocket.listen()
 
+        self.list_of_username = []
         self.list_of_known_clientSockets = []
         self.list_of_known_clientAddr = []
 
@@ -52,11 +53,14 @@ class SocketHandler:
         elif text[:5] =="/kick":
             user = text[5:]
             print(user)
-            self.list_of_known_clientSockets.remove
-            self.list_of_known_clientAddr.remove(clientAddr)
-            self.sendAndShowMsg(username + " disconnected")
-            self.users.inactiveUser(username)
-            return
+            for i in range (len(self.list_of_username)):
+                if [i] == user:
+                    self.list_of_username.remove(i)
+                    self.list_of_known_clientAddr.remove(i)
+                    self.list_of_known_clientSockets.remove(i)
+
+    def startSendThread(self,text):
+        _thread.start_new_thread(self.sendAndShowMsg,(text,()))
 
     def startReceiverThread(self, clientSocket, clientAddr):
         _thread.start_new_thread(self.startReceiving,(clientSocket,clientAddr,))
@@ -66,9 +70,11 @@ class SocketHandler:
 
         if resultOfLogin !=False:
             username = resultOfLogin
+
             self.list_of_unknown_clientSockets.remove(clientSocket)
             self.list_of_unknown_clientAddr.remove(clientAddr)
 
+            self.list_of_username.append(username)
             self.list_of_known_clientSockets.append(clientSocket)
             self.list_of_known_clientAddr.append(clientAddr)
 
@@ -114,7 +120,8 @@ class SocketHandler:
         while True:
             try:
                 msg = clientSocket.recv(1024).decode()
-                self.sendAndShowMsg(username + ": " + msg)
+                for clientSock in self.list_of_known_clientSockets:
+                    clientSock.send(str.encode(username+": "+msg))
                 print(username+": "+msg)
             except:
                 self.list_of_known_clientSockets.remove(clientSocket)
